@@ -1,20 +1,27 @@
 import { Request, Response } from "express";
 import { ProductServices } from "./product.service";
+import { zodProduct } from "./product.validation";
 
 const createProduct = async (req: Request, res: Response) => {
   try {
     const { product: productData } = req.body;
-    const result = await ProductServices.createProductIntoDB(productData);
+
+    // Zod validation
+    const zodParsedData = zodProduct.parse(productData);
+
+    const result = await ProductServices.createProductIntoDB(zodParsedData);
 
     res.status(200).json({
       success: true,
       message: "Product is created successfully",
       data: result,
     });
-  } catch (err) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: "Internal server error",
+      message: err.message || "Internal server error",
+      error: err,
     });
   }
 };
