@@ -52,6 +52,12 @@ const getSingleProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
     const result = await ProductServices.getSingleProductFromDB(productId);
+    if (!result) {
+      return res.json({
+        success: false,
+        message: "Product not found",
+      });
+    }
     res.status(200).json({
       success: true,
       message: "Products fetched successfully!",
@@ -69,10 +75,22 @@ const updateSingleProduct = async (req: Request, res: Response) => {
   try {
     const productId = req.params.productId;
     const productData = req.body;
+    if (!productData) {
+      return res.status(400).json({
+        success: false,
+        message: "No data found",
+      });
+    }
     const result = await ProductServices.updateSingleProductFromDB(
       productId,
       productData
     );
+    if (!result) {
+      return res.status(400).json({
+        success: false,
+        message: "Failed to update",
+      });
+    }
     res.status(200).json({
       success: true,
       message: "Product updated successfully!",
