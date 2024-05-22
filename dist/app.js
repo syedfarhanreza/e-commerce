@@ -13,7 +13,7 @@ app.use((0, cors_1.default)());
 app.use("/api", product_route_1.ProductRoutes);
 app.use("/api", order_route_1.OrderRoutes);
 app.get("/", (req, res) => {
-    res.send("Hello World!");
+    res.send("Hello E-Commerce Server!");
 });
 // error handle
 app.use((req, res) => {
