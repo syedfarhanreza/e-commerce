@@ -18,21 +18,28 @@ This project is an Express application built with TypeScript, integrating MongoD
 
 # Installation 
 ## Clone the repository
-- git clone  https://github.com/syedfarhanreza/e-commerce.git
-- cd e-commerce
+```sh
+ git clone  https://github.com/syedfarhanreza/e-commerce.git
+cd e-commerce
+```
 
 ## Install dependencies
 Open the project file in the terminal and run `npm install`
-```npm install````
+```sh
+npm install
+```
 
 ## Set up environment variables
 Create a `.env`  file in the root directory and add the following:
+```
 MONGO_URI=your_mongo_db_connection_string
 PORT=5000
+```
 
 ## Start the server
+```
 npm run start:dev
-
+```
 
 
 
