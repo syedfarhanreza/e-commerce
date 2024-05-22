@@ -1,22 +1,23 @@
 import { Schema, model } from "mongoose";
-import { Order } from "./order.interface";
+import { TOrder } from "./order.interface";
 
-const orderSchema = new Schema<Order>({
+const orderSchema = new Schema<TOrder>({
   email: {
     type: String,
-    required: true,
+    required: [true, "Email is required"],
   },
   productId: {
     type: Schema.Types.ObjectId,
     product: true,
+    required: [true, "productId is required"],
   },
   price: {
     type: Number,
-    required: true,
+    required: [true, "Price is required"],
   },
   quantity: {
     type: Number,
-    required: true,
+    required: [true, "Quantity is required"],
   },
 });
 const OrderModel = model("Order", orderSchema);

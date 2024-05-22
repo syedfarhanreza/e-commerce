@@ -1,6 +1,6 @@
 import { Schema } from "mongoose";
 
-export type Order = {
+export type TOrder = {
   email: string;
   productId: string | Schema.Types.ObjectId;
   price: number;
