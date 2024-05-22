@@ -15,4 +15,19 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
 });
 
+// error handle
+app.use((req: Request, res: Response) => {
+  res.status(404).json({
+    success: false,
+    message: "Route not found",
+  });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  app.use((err: any, req: Request, res: Response) => {
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  });
+});
+
 export default app;
