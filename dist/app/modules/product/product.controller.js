@@ -15,6 +15,12 @@ const product_validation_1 = require("./product.validation");
 const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { product: productData } = req.body;
+        if (!productData) {
+            return res.status(400).send({
+                success: false,
+                message: "no data found",
+            });
+        }
         // Zod validation
         const zodParsedData = product_validation_1.zodProduct.parse(productData);
         const result = yield product_service_1.ProductServices.createProductIntoDB(zodParsedData);
@@ -92,7 +98,7 @@ const deleteSingleProduct = (req, res) => __awaiter(void 0, void 0, void 0, func
         if (!result) {
             res.status(400).json({
                 success: false,
-                message: "failed to delete",
+                message: "failed to delete product",
             });
         }
         res.status(200).json({

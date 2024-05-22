@@ -5,6 +5,12 @@ import { zodProduct } from "./product.validation";
 const createProduct = async (req: Request, res: Response) => {
   try {
     const { product: productData } = req.body;
+    if (!productData) {
+      return res.status(400).send({
+        success: false,
+        message: "no data found",
+      });
+    }
 
     // Zod validation
     const zodParsedData = zodProduct.parse(productData);
@@ -65,7 +71,7 @@ const updateSingleProduct = async (req: Request, res: Response) => {
     const productData = req.body;
     const result = await ProductServices.updateSingleProductFromDB(
       productId,
-      productData,
+      productData
     );
     res.status(200).json({
       success: true,
@@ -88,7 +94,7 @@ const deleteSingleProduct = async (req: Request, res: Response) => {
     if (!result) {
       res.status(400).json({
         success: false,
-        message: "failed to delete",
+        message: "failed to delete product",
       });
     }
     res.status(200).json({

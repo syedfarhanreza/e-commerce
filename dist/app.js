@@ -15,4 +15,18 @@ app.use("/api", order_route_1.OrderRoutes);
 app.get("/", (req, res) => {
     res.send("Hello World!");
 });
+// error handle
+app.use((req, res) => {
+    res.status(404).json({
+        success: false,
+        message: "Route not found",
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    app.use((err, req, res) => {
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error",
+        });
+    });
+});
 exports.default = app;
