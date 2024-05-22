@@ -23,7 +23,7 @@ This project is an Express application built with TypeScript, integrating MongoD
 
 ## Install dependencies
 Open the project file in the terminal and run `npm install`
-npm install
+```npm install````
 
 ## Set up environment variables
 Create a `.env`  file in the root directory and add the following:
