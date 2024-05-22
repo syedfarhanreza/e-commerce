@@ -18,8 +18,8 @@ This project is an Express application built with TypeScript, integrating MongoD
 
 # Installation 
 ## Clone the repository
-git clone  https://github.com/syedfarhanreza/e-commerce.git
-cd e-commerce
+- git clone  https://github.com/syedfarhanreza/e-commerce.git
+- cd e-commerce
 
 ## Install dependencies
 Open the project file in the terminal and run `npm install`
