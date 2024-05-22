@@ -11,20 +11,107 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductControllers = void 0;
 const product_service_1 = require("./product.service");
+const product_validation_1 = require("./product.validation");
 const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const product = req.body;
-        const result = yield product_service_1.ProductServices.createProductIntoDB(product);
+        const { product: productData } = req.body;
+        // Zod validation
+        const zodParsedData = product_validation_1.zodProduct.parse(productData);
+        const result = yield product_service_1.ProductServices.createProductIntoDB(zodParsedData);
         res.status(200).json({
             success: true,
             message: "Product is created successfully",
             data: result,
         });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }
     catch (err) {
-        console.log(err);
+        res.status(500).json({
+            success: false,
+            message: err.message || "Internal server error",
+            error: err,
+        });
+    }
+});
+const getAllProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const searchTerm = req.query.searchTerm;
+        const result = yield product_service_1.ProductServices.getAllProductFromDB(searchTerm);
+        res.status(200).json({
+            success: true,
+            message: "Products fetched successfully!",
+            data: result,
+        });
+    }
+    catch (err) {
+        res.status(400).json({
+            success: false,
+            message: "Product not found",
+        });
+    }
+});
+const getSingleProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { productId } = req.params;
+        const result = yield product_service_1.ProductServices.getSingleProductFromDB(productId);
+        res.status(200).json({
+            success: true,
+            message: "Products fetched successfully!",
+            data: result,
+        });
+    }
+    catch (err) {
+        res.status(400).json({
+            success: false,
+            message: "Product not found",
+        });
+    }
+});
+const updateSingleProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const productId = req.params.productId;
+        const productData = req.body;
+        const result = yield product_service_1.ProductServices.updateSingleProductFromDB(productId, productData);
+        res.status(200).json({
+            success: true,
+            message: "Product updated successfully!",
+            data: result,
+        });
+    }
+    catch (err) {
+        res.status(400).json({
+            success: false,
+            message: "Couldn't update data",
+        });
+    }
+});
+const deleteSingleProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { productId } = req.body;
+        const result = yield product_service_1.ProductServices.deleteSingleProductFromDB(productId);
+        if (!result) {
+            res.status(400).json({
+                success: false,
+                message: "failed to delete",
+            });
+        }
+        res.status(200).json({
+            success: true,
+            message: "Product deleted successfully!",
+            data: null,
+        });
+    }
+    catch (err) {
+        res.status(400).json({
+            success: false,
+            message: "Couldn't delete data",
+        });
     }
 });
 exports.ProductControllers = {
     createProduct,
+    getAllProducts,
+    getSingleProduct,
+    updateSingleProduct,
+    deleteSingleProduct,
 };

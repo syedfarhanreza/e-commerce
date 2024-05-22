@@ -1,89 +1,89 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Response } from "express";
+import Order from "./order.model";
 import { TOrder } from "./order.interface";
-import OrderModel from "./order.model";
 import ProductModel from "../product/product.model";
 
 const createOrderIntoDB = async (orderData: TOrder, res: Response) => {
   try {
     const productId = orderData.productId;
 
-    const responsePayload = {
+    const response = {
       success: false,
       message: "",
     };
 
-    // Return if the order quantity is 0
+    // return if the order quantity is 0
     if (orderData.quantity < 1) {
-      responsePayload.message = "Insufficient order quantity";
-      responsePayload.success = false;
-      return res.status(400).send(responsePayload);
+      response.message = "Insufficient order quantity";
+      response.success = false;
+      return res.status(400).send(response);
     }
 
-    // Find the product
+    // find the product
     const product = await ProductModel.findById(productId);
     if (!product) {
-      responsePayload.message = "Invalid product id";
-      responsePayload.success = false;
-      return res.status(400).json(responsePayload);
+      response.message = "Invalid product id";
+      response.success = false;
+      return res.status(400).json(response);
     }
 
-    // Check if the product quantity is sufficient
-    const productDetails = product.toObject();
-    const availableQuantity = productDetails.inventory.quantity;
-    const isProductInStock = productDetails.inventory.inStock;
-    if (!isProductInStock || orderData.quantity > availableQuantity) {
-      responsePayload.message = "Insufficient quantity available in inventory";
-      responsePayload.success = false;
-      return res.status(400).json(responsePayload);
+    //   check if the product quantity
+    const productData = product.toObject();
+    const availableQuantity = productData.inventory.quantity;
+    const isStock = productData.inventory.inStock;
+    if (!isStock || orderData.quantity > availableQuantity) {
+      response.message = "Insufficient quantity available in inventory";
+      response.success = false;
+      return res.status(400).json(response);
     }
 
-    // Check if the quantity is equal to available quantity
-    const isQuantityEqual =
-      productDetails.inventory.quantity === orderData.quantity;
+    //   check if the quantity is equal to available quantity
+    const isEqualQuantity =
+      productData.inventory.quantity === orderData.quantity;
 
-    // Update the isStock property
-    if (isQuantityEqual) {
+    //   update the isStock property
+    if (isEqualQuantity) {
       await ProductModel.findByIdAndUpdate(
         productId,
         { "inventory.inStock": false, "inventory.quantity": 0 },
-        { new: true, runValidators: true }
+        { new: true, runValidators: true },
       );
     } else {
-      // Set new product Quantity
+      // set new product Quantity
       await ProductModel.findByIdAndUpdate(
         productId,
         {
           "inventory.quantity":
-            productDetails.inventory.quantity - orderData.quantity,
+            productData.inventory.quantity - orderData.quantity,
         },
-        { new: true, runValidators: true }
+        { new: true, runValidators: true },
       );
     }
 
-    // Create the order
-    const createdOrder = await OrderModel.create(orderData);
+    //   set  order
+    const result = await Order.create(orderData);
 
-    responsePayload.message = "Order created successfully!";
-    responsePayload.success = true;
+    response.message = "Order created successfully!";
+    response.success = true;
     res.json({
-      ...responsePayload,
-      data: createdOrder,
+      ...response,
+      data: result,
     });
   } catch (error) {
     res.status(400).send({
       success: false,
-      message: "Can't create order",
+      message: "Cant't create order",
     });
   }
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getAllOrderService = async (query: any) => {
-  const orders = await OrderModel.find(query);
-  return orders;
+const getAllOrderFromDB = async (find: any) => {
+  const result = await Order.find(find);
+  return result;
 };
 
-export const OrderServices = {
+export const orderServices = {
   createOrderIntoDB,
-  getAllOrderService,
+  getAllOrderFromDB,
 };

@@ -65,7 +65,7 @@ const updateSingleProduct = async (req: Request, res: Response) => {
     const productData = req.body;
     const result = await ProductServices.updateSingleProductFromDB(
       productId,
-      productData
+      productData,
     );
     res.status(200).json({
       success: true,

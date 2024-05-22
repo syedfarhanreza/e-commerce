@@ -14,7 +14,7 @@ const zodInventory = z.object({
     .boolean()
     .refine(
       (val) => typeof val === "boolean",
-      "InStock must be a boolean value"
+      "InStock must be a boolean value",
     ),
 });
 

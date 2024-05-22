@@ -1,19 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from "express";
-import { OrderServices } from "./order.service";
+import { orderServices } from "./order.service";
 import { zodOrder } from "./order.validation";
 
-const { createOrderIntoDB, getAllOrderService } = OrderServices;
+// order services
+const { createOrderIntoDB, getAllOrderFromDB } = orderServices;
 
 export const createOrder = async (req: Request, res: Response) => {
   const { body } = req;
-  if (!body) {
+  const { order } = body;
+
+  if (!order) {
     return res.send({
       success: false,
-      message: "No product found",
+      message: "No order data found",
     });
   }
-  const { data, error } = zodOrder.safeParse(body);
+  const { data, error } = zodOrder.safeParse(order);
   if (error) {
     return res.send({
       success: false,
@@ -25,16 +28,18 @@ export const createOrder = async (req: Request, res: Response) => {
   await createOrderIntoDB(data, res);
 };
 
+// get all order
 export const getAllOrder = async (req: Request, res: Response) => {
   try {
     const { email } = req.query;
 
+    // response data
     const find: any = {};
     if (email) {
       find.email = email;
     }
 
-    const result = await getAllOrderService(find);
+    const result = await getAllOrderFromDB(find);
 
     const response: any = {
       success: result.length > 0,
