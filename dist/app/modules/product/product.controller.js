@@ -60,6 +60,12 @@ const getSingleProduct = (req, res) => __awaiter(void 0, void 0, void 0, functio
     try {
         const { productId } = req.params;
         const result = yield product_service_1.ProductServices.getSingleProductFromDB(productId);
+        if (!result) {
+            return res.json({
+                success: false,
+                message: "Product not found",
+            });
+        }
         res.status(200).json({
             success: true,
             message: "Products fetched successfully!",
@@ -77,7 +83,19 @@ const updateSingleProduct = (req, res) => __awaiter(void 0, void 0, void 0, func
     try {
         const productId = req.params.productId;
         const productData = req.body;
+        if (!productData) {
+            return res.status(400).json({
+                success: false,
+                message: "No data found",
+            });
+        }
         const result = yield product_service_1.ProductServices.updateSingleProductFromDB(productId, productData);
+        if (!result) {
+            return res.status(400).json({
+                success: false,
+                message: "Failed to update",
+            });
+        }
         res.status(200).json({
             success: true,
             message: "Product updated successfully!",
