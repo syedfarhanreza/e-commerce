@@ -33,7 +33,7 @@ const getSingleProductFromDB = async (id: string) => {
 // Update Product
 const updateSingleProductFromDB = async (
   id: string,
-  updateData: Partial<Product>,
+  updateData: Partial<Product>
 ) => {
   const result = await ProductModel.findByIdAndUpdate(id, updateData, {
     new: true,
@@ -42,7 +42,7 @@ const updateSingleProductFromDB = async (
 };
 // delete a product
 const deleteSingleProductFromDB = async (id: string) => {
-  const result = await ProductModel.findOneAndDelete({ id });
+  const result = await ProductModel.findOneAndDelete({ _id: id });
   return result;
 };
 export const ProductServices = {

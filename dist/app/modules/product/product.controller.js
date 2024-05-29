@@ -111,7 +111,7 @@ const updateSingleProduct = (req, res) => __awaiter(void 0, void 0, void 0, func
 });
 const deleteSingleProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { productId } = req.body;
+        const { productId } = req.params;
         const result = yield product_service_1.ProductServices.deleteSingleProductFromDB(productId);
         if (!result) {
             res.status(400).json({
@@ -119,7 +119,7 @@ const deleteSingleProduct = (req, res) => __awaiter(void 0, void 0, void 0, func
                 message: "failed to delete product",
             });
         }
-        res.status(200).json({
+        res.status(200).send({
             success: true,
             message: "Product deleted successfully!",
             data: null,

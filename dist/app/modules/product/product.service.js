@@ -47,7 +47,7 @@ const updateSingleProductFromDB = (id, updateData) => __awaiter(void 0, void 0, 
 });
 // delete a product
 const deleteSingleProductFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield product_model_1.default.findOneAndDelete({ id });
+    const result = yield product_model_1.default.findOneAndDelete({ _id: id });
     return result;
 });
 exports.ProductServices = {
