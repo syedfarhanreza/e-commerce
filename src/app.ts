@@ -12,7 +12,7 @@ app.use("/api", ProductRoutes);
 app.use("/api", OrderRoutes);
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Hello World!");
+  res.send("Hello E-Commerce Server!");
 });
 
 // error handle

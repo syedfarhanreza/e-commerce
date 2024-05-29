@@ -4,8 +4,8 @@ import { zodProduct } from "./product.validation";
 
 const createProduct = async (req: Request, res: Response) => {
   try {
-    const { product: productData } = req.body;
-    if (!productData) {
+    const { body } = req;
+    if (!body) {
       return res.status(400).send({
         success: false,
         message: "no data found",
@@ -13,7 +13,7 @@ const createProduct = async (req: Request, res: Response) => {
     }
 
     // Zod validation
-    const zodParsedData = zodProduct.parse(productData);
+    const zodParsedData = zodProduct.parse(body);
 
     const result = await ProductServices.createProductIntoDB(zodParsedData);
 
@@ -52,6 +52,12 @@ const getSingleProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
     const result = await ProductServices.getSingleProductFromDB(productId);
+    if (!result) {
+      return res.json({
+        success: false,
+        message: "Product not found",
+      });
+    }
     res.status(200).json({
       success: true,
       message: "Products fetched successfully!",
@@ -68,11 +74,23 @@ const getSingleProduct = async (req: Request, res: Response) => {
 const updateSingleProduct = async (req: Request, res: Response) => {
   try {
     const productId = req.params.productId;
-    const productData = req.body;
+    const body = req;
+    if (!body) {
+      return res.status(400).json({
+        success: false,
+        message: "No data found",
+      });
+    }
     const result = await ProductServices.updateSingleProductFromDB(
       productId,
-      productData
+      req.body
     );
+    if (!result) {
+      return res.status(400).json({
+        success: false,
+        message: "Failed to update",
+      });
+    }
     res.status(200).json({
       success: true,
       message: "Product updated successfully!",
