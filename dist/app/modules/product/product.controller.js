@@ -14,15 +14,15 @@ const product_service_1 = require("./product.service");
 const product_validation_1 = require("./product.validation");
 const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { product: productData } = req.body;
-        if (!productData) {
+        const { body } = req;
+        if (!body) {
             return res.status(400).send({
                 success: false,
                 message: "no data found",
             });
         }
         // Zod validation
-        const zodParsedData = product_validation_1.zodProduct.parse(productData);
+        const zodParsedData = product_validation_1.zodProduct.parse(body);
         const result = yield product_service_1.ProductServices.createProductIntoDB(zodParsedData);
         res.status(200).json({
             success: true,
@@ -60,6 +60,12 @@ const getSingleProduct = (req, res) => __awaiter(void 0, void 0, void 0, functio
     try {
         const { productId } = req.params;
         const result = yield product_service_1.ProductServices.getSingleProductFromDB(productId);
+        if (!result) {
+            return res.json({
+                success: false,
+                message: "Product not found",
+            });
+        }
         res.status(200).json({
             success: true,
             message: "Products fetched successfully!",
@@ -76,8 +82,20 @@ const getSingleProduct = (req, res) => __awaiter(void 0, void 0, void 0, functio
 const updateSingleProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const productId = req.params.productId;
-        const productData = req.body;
-        const result = yield product_service_1.ProductServices.updateSingleProductFromDB(productId, productData);
+        const { body } = req;
+        if (!body) {
+            return res.status(400).json({
+                success: false,
+                message: "No data found",
+            });
+        }
+        const result = yield product_service_1.ProductServices.updateSingleProductFromDB(productId, req.body);
+        if (!result) {
+            return res.status(400).json({
+                success: false,
+                message: "Failed to update",
+            });
+        }
         res.status(200).json({
             success: true,
             message: "Product updated successfully!",
