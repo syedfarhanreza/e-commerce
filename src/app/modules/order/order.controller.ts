@@ -8,15 +8,14 @@ const { createOrderIntoDB, getAllOrderFromDB } = orderServices;
 
 export const createOrder = async (req: Request, res: Response) => {
   const { body } = req;
-  const { order } = body;
 
-  if (!order) {
+  if (!body) {
     return res.send({
       success: false,
       message: "No order data found",
     });
   }
-  const { data, error } = zodOrder.safeParse(order);
+  const { data, error } = zodOrder.safeParse(body);
   if (error) {
     return res.send({
       success: false,
