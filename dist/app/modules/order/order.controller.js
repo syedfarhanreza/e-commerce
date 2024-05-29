@@ -16,14 +16,13 @@ const order_validation_1 = require("./order.validation");
 const { createOrderIntoDB, getAllOrderFromDB } = order_service_1.orderServices;
 const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { body } = req;
-    const { order } = body;
-    if (!order) {
+    if (!body) {
         return res.send({
             success: false,
             message: "No order data found",
         });
     }
-    const { data, error } = order_validation_1.zodOrder.safeParse(order);
+    const { data, error } = order_validation_1.zodOrder.safeParse(body);
     if (error) {
         return res.send({
             success: false,
